@@ -1,6 +1,6 @@
 from functools import partial
 #import tensorflow as tf
-from keras.layers import Input, ReLU, Add, UpSampling3D, Activation, SpatialDropout3D, Conv3D
+from keras.layers import Input, LeakyReLU, Add, UpSampling3D, Activation, SpatialDropout3D, Conv3D
 from keras.engine import Model
 from keras.optimizers import Adam
 from keras.utils import plot_model
@@ -10,7 +10,7 @@ from ..metrics import weighted_dice_coefficient_loss, dice_coefficient
 #from keras_diagram import ascii
 from keras_sequential_ascii import keras2ascii
 
-create_convolution_block = partial(create_convolution_block, activation=ReLU, instance_normalization=True)
+create_convolution_block = partial(create_convolution_block, activation=LeakyReLU, instance_normalization=True)
 
 
 # create_separable_convolution = partial(create_separable_convolution, activation=LeakyReLU, instance_normalization=True)

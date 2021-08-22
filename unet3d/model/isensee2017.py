@@ -184,13 +184,14 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
         elif (level_number == 2):
             segmentation_layer = UpSampling3D(size=(4, 4, 4))(segmentation_layer)
             output_layer2 = segmentation_layers[0]
-            output_layer2 = Add()([output_layer2, segmentation_layer])
+            output_layer2 = Add()([output_layer2, segmentation_layer, output_layer0])
         elif (level_number == 1):
             segmentation_layer = UpSampling3D(size=(2, 2, 2))(segmentation_layer)
             output_layer3 = segmentation_layers[0]
-            output_layer3 = Add()([output_layer3, segmentation_layer])
+            output_layer3 = Add()([output_layer3, segmentation_layer, output_layer2, output_layer0])
         elif (level_number == 0):
-            output_layer = Add()([output_layer0, output_layer2, output_layer3])
+            output_layer4 = segmentation_layers[0]
+            output_layer = Add()([output_layer0, output_layer2, output_layer3, output_layer4])
 
     activation_block = Activation(activation_name)(output_layer)
 

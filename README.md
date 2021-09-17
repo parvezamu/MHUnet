@@ -6,23 +6,16 @@ This is our solution used for IEEE access paper.
 
 We've only touched the segmentation task(task1) and the survival task(task2).
 
-The 3D U-Net model is borrowed from Isensee et.al's paper and ellisdg's repository. You could also see this implementation as an extension to ellisdg's work. The solution to task 2 is a development based on xf4j's work which won the title in BraTS 2018.
+The 3D U-Net model is borrowed from Isensee et.al's paper and ellisdg's repository. You could also see this implementation as an extension to ellisdg's work. 
 
 
 
 Development Environment
-Both my desktop and laptop had contributed a lot to the project.
+My desktop had contributed a lot to the project.
 
 Desktop:
+ubuntu16.04 + virtualenv + python==3.6 + tensorflow-gpu==1.14.0 + keras==2.2.4
 
-gtx1080ti
-ubuntu16.04 + virtualenv + python==3.5.2 + tensorflow-gpu==1.11.0 + keras==2.2.4
-Laptop:
-
-gtx1060
-ubuntu16.04 + virtualenv + python==3.5.2 + tensorflow-gpu==1.14.0 + keras==2.2.4
-How to setting up the GPU development environment
-You could refer to my setting up history here
 
 Packages
 Here are some packages you may need to install.
@@ -49,8 +42,6 @@ Folder unet3d encapsulates 3D U-Net related functions that you could invoke in d
 
 demo_task1 includes brain tumor segmentation task specific codes.
 
-demo_task2 includes survival days prediction task specific codes.
-
 The self-explained demo_run.ipynb in demo_task1 and demo_task2 illustrate the basic flow of the program. Since there are two phases of training process with different patching strategies, we need to switch the bool value of config['pred_specific'] in demo_task1/train_model.py to decide which strategy do we need to use for training. You may also need to manually delete two temporarily generated file demo_task1/num_patches_training.npy and demo_task1/num_patches_val.npy once you changed the patching strategy.
 
 This program is valid for both validation dataset and test dataset. Once you changed the validation dataset (to test dataset), please delete the old data/val_data.h5 and data/val_index_list.pkl.
@@ -60,6 +51,6 @@ The n4itk bias correction is time consuming and optional during this project. Yo
 Last but not the least, pay attention that we shield something in .gitignore.
 
 Acknowledgment
-Again, this work refers to Isensee et.al's paper, ellisdg's repository and xf4j's repository. We deeply appreciate their contributions to the community.
+Again, this work refers to Isensee et.al's paper, ellisdg's repository, Woody's repository. We deeply appreciate their contributions to the community.
 
 Many thanks to the host of BraTS datasets.

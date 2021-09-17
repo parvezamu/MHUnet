@@ -1,0 +1,30 @@
+Here your brats data of the following structure
+.
+├── data
+│   ├── original
+│   │   ├── HGG
+│   │   │   ├── BraTS19_2013_2_1
+│   │   │   │   ├── BraTS19_2013_2_1_flair.nii.gz
+│   │   │   │   ├── BraTS19_2013_2_1_seg.nii.gz
+│   │   │   │   ├── BraTS19_2013_2_1_t1ce.nii.gz
+│   │   │   │   ├── BraTS19_2013_2_1_t1.nii.gz
+│   │   │   │   └── BraTS19_2013_2_1_t2.nii.gz
+│   │   │   └── ...
+│   │   └── LGG
+│   │       ├── BraTS19_2013_0_1
+│   │       │   ├── BraTS19_2013_0_1_flair.nii.gz
+│   │       │   ├── BraTS19_2013_0_1_seg.nii.gz
+│   │       │   ├── BraTS19_2013_0_1_t1ce.nii.gz
+│   │       │   ├── BraTS19_2013_0_1_t1.nii.gz
+│   │       │   └── BraTS19_2013_0_1_t2.nii.gz
+│   │       └── ...
+│   ├── preprocessed
+│   └── val_data
+│       └── val
+│           ├── BraTS19_CBICA_AAM_1
+│           │   ├── BraTS19_CBICA_AAM_1_flair.nii.gz
+│           │   ├── BraTS19_CBICA_AAM_1_t1ce.nii.gz
+│           │   ├── BraTS19_CBICA_AAM_1_t1.nii.gz
+│           │   └── BraTS19_CBICA_AAM_1_t2.nii.gz
+│   ├── preprocessed_val_data
+

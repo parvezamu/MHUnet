@@ -54,13 +54,13 @@ def weighted_dice_coefficient(y_true, y_pred, axis=(-3, -2, -1), smooth=0.00001)
     :param axis:
     :return:
     """
-    r= K.mean(2. * (K.sum(y_true * y_pred,
+    return K.mean(2. * (K.sum(y_true * y_pred,
                               axis=axis) + smooth/2)/(K.sum(y_true,
                                                             axis=axis) + K.sum(y_pred,
                                                                                axis=axis) + smooth))
    # f= ((binary_crossentropy(y_true, y_pred)) + smooth/2)
   #  h=r + f
-    return tf.reshape(r, (-1, 1, 1))
+    #return tf.reshape(r, (-1, 1, 1))
 
 def weighted_dice_coefficient_loss(y_true, y_pred):
     return -(weighted_dice_coefficient(y_true, y_pred) - binary_crossentropy(y_true, y_pred))

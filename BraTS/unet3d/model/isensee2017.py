@@ -321,7 +321,7 @@ def create_up_sampling_module1(input_layer, n_filters, dilation_rate, dropout_ra
     #convolution9 = create_convolution_block(dropout1, n_filters=2, dilation_rate=(3, 3, 3))
    # concat3 = concatenate([convolution8, convolution9], axis=1)
     ###############################################################################################
-    concat = concatenate([dropout, concat1, concat2, concat3], axis=1)
+    concat = concatenate([dropout, dropout, concat1, concat2, concat3], axis=1)
     convolution10 = create_convolution_block(concat, n_filters, kernel=(1, 1, 1))
     # convolution7=create_convolution_block(convolution6, n_filters)
     return convolution10

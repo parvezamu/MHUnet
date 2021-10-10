@@ -13,9 +13,6 @@ from keras_sequential_ascii import keras2ascii
 create_convolution_block = partial(create_convolution_block, activation=LeakyReLU, instance_normalization=True)
 
 
-# create_separable_convolution = partial(create_separable_convolution, activation=LeakyReLU, instance_normalization=True)
-
-
 def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5, dropout_rate=0.2,
                       n_segmentation_levels=4, n_labels=4, optimizer=Adam, initial_learning_rate=3e-4,
                       loss_function=weighted_dice_coefficient_loss, activation_name="sigmoid",
@@ -46,43 +43,16 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
     level_output_layers = list()
     level_filters = list()
     for level_number in range(depth):
-#        if (level_number == 4):
- #           n_level_filters = 256
-  #          level_filters.append(n_level_filters)
-   #     elif (level_number < 4):
         n_level_filters = (2 ** level_number) * n_base_filters
-            # if(level_number > 1):
         level_filters.append(n_level_filters)
 
         if current_layer is inputs:
             in_conv1 = create_convolution_block(current_layer, n_level_filters)
-            #            in_conva=create_convolution_block(in_conv1, n_level_filters, strides=(2, 2, 2))
-            # in_convb = create_convolution_block(in_conv1, n_level_filters)
-            # in_convc = create_convolution_block(in_convb, n_level_filters)
             in_conv2 = create_context_module2(in_conv1, n_level_filters, dilation_rate, dropout_rate=dropout_rate)
             in_conv2 = concatenate([in_conv1, in_conv2], axis=1)
             in_conv = create_convolution_block(in_conv2, n_level_filters, kernel=(1, 1, 1))
         else:
             in_conv = create_convolution_block(current_layer, n_level_filters, strides=(2, 2, 2))
-        #     if(level_number<2):
-        #        if(level_number==1):
-        #       for i in range(2):
-        #               if(i==0):
-        #             context_output_layer1 = create_context_module(in_conv, n_level_filters,  dropout_rate=dropout_rate)
-        #       context_output_layer1=Add([in_conv, context_output_layer1])
-        #
-        #      elif(i==1):
-        #     #     context_output_layer = create_context_module(context_output_layer1, n_level_filters,
-        #                                                dropout_rate=dropout_rate)
-        #          context_output_layer = Add([context_output_layer1, context_output_layer])
-        #         summation_layer = concatenate([context_output_layer1, context_output_layer])
-        #         level_output_layers.append(summation_layer)
-        #    current_layer = summation_layer
-        #   else:
-        #            context_output_layer= create_context_module(in_conv, n_level_filters, dropout_rate=dropout_rate)
-        #        summation_layer = concatenate([in_conv, context_output_layer], axis=1)
-        #         level_output_layers.append(summation_layer)
-        #      current_layer = summation_layer
         if (level_number < 5):
             for i in range(1):
                 if (i == 0):
@@ -91,26 +61,8 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
                     summation_layer = concatenate([in_conv, context_output_layer], axis=1)
                     level_output_layers.append(summation_layer)
                     current_layer = summation_layer
-                    print("Current_layer", current_layer)
-    #  elif(level_number==4):
-    #      for i in range(1):
-    #         if (i == 0):
-    #            context_output_layer = create_context_module2(in_conv, n_level_filters, dilation_rate,  dropout_rate=dropout_rate)
-    #           summation_layer = concatenate([in_conv, context_output_layer], axis=1)
-    #          level_output_layers.append(summation_layer)
-    #         current_layer = summation_layer
-    # elif (i == 1):
-    #   context_output_layer2 = create_context_module2(context_output_layer1, n_level_filters, dilation_rate,
-    #           dropout_rate=dropout_rate)
-    #   elif (i == 2):#
-    #        context_output_layer3 = create_context_module2(context_output_layer2, n_level_filters, dilation_rate,  dropout_rate=dropout_rate)
-    #    elif (i == 3):
-    #       context_output_layer = create_context_module2(context_output_layer3, n_level_filters, dilation_rate,
-    #        dropout_rate=dropout_rate)
-    #   if (i == 3):
-    #      summation_layer = Add()([in_conv, context_output_layer])
-    #      level_output_layers.append(summation_layer)
-    #   current_layer = summation_layer
+              
+   
     segmentation_layers = list()
     for level_number in range(depth - 2, -1, -1):
         up_sampling1 = create_up_sampling_module(current_layer, level_filters[level_number], dilation_rate,
@@ -120,9 +72,9 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
 
             a1 = create_convolution_block(current_layer, level_filters[level_number + 1], kernel=(1, 1, 1))
             a2 = UpSampling3D(size=(2, 2, 2))(a1)
-            # a3=create_convolution_block(a1, level_filters[3], kernel=(1, 1, 1))
+         
             a4 = Add()([up_sampling, a2])
-            print("A", a4)
+        
             ################################################################
             current_layer0 = level_output_layers[3]
             aa0 = level_filters[3]
@@ -130,14 +82,11 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
             aa2 = Add()([up_sampling, aa1])
             ##############################################################################
             current_layer1 = level_output_layers[2]
-            # print("A5", current_layer1)
             aa = level_filters[2]
-            # print("D", aa)
             a5 = create_convolution_block(current_layer1, aa, kernel=(1, 1, 1))
             a6 = create_convolution_block(a5, aa, strides=(2, 2, 2))
             a7 = create_convolution_block(a6, 4 * aa, kernel=(1, 1, 1))
             a8 = Add()([up_sampling, a7])
-            print("B", a8)
             ########################################################################
             current_layer2 = level_output_layers[1]
             ab = level_filters[1]
@@ -145,7 +94,6 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
             a10 = create_convolution_block(a9, ab, strides=(4, 4, 4))
             a11 = create_convolution_block(a10, 8 * ab, kernel=(1, 1, 1))
             a12 = Add()([up_sampling, a11])
-            print("C", a12)
             #################################################################################
             current_layer3 = level_output_layers[0]
             ac = level_filters[0]
@@ -153,15 +101,11 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
             a14 = create_convolution_block(a13, ac, strides=(8, 8, 8))
             a15 = create_convolution_block(a14, 16 * ac, kernel=(1, 1, 1))
             a16 = Add()([up_sampling, a15])
-            print("D", a16)
             ################################################################################
             a17 = Add()([up_sampling, aa2, a4, a8, a12, a16])
-            print("E", a17)
             up_sampling2 = create_up_sampling_module1(a17, 2 * level_filters[level_number], dilation_rate,
                                                       dropout_rate=dropout_rate)
-            print("F", up_sampling2)
             concatenation_layer = Add()([level_output_layers[level_number], up_sampling2])
-            print("G", concatenation_layer)
         else:
             concatenation_layer = Add()([level_output_layers[level_number], up_sampling])
         localization_output1 = create_localization_module(concatenation_layer, level_filters[level_number],
@@ -174,7 +118,6 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
         if level_number < n_segmentation_levels:
             segmentation_layers.insert(0, Conv3D(n_labels, (1, 1, 1))(current_layer))
 
-    # output_layer = None
     for level_number in reversed(range(n_segmentation_levels)):
         segmentation_layer = segmentation_layers[level_number]
         if (level_number == 3):
@@ -198,10 +141,8 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
     activation_block = Activation(activation_name)(output_layer)
 
     model = Model(inputs=inputs, outputs=activation_block)
-    # parallel_model = multi_gpu_model(model, gpus=2)
     print(model.summary())
     print(keras2ascii(model))
-#    print(ascii(model))
 
     if not isinstance(metrics, list):
         metrics = [metrics]
@@ -237,7 +178,6 @@ def create_up_sampling_module(input_layer, n_filters, dilation_rate, size=(2, 2,
     dropout1=create_convolution_block(dropout, n_filters, kernel=(1, 1, 1))
     concat = Add()([dropout1, con1])
     convolution6 = create_convolution_block(concat, n_filters, kernel=(1, 1, 1))
-    # convolution7=create_convolution_block(convolution6, n_filters)
     return convolution6
 
 
@@ -248,21 +188,7 @@ def create_context_module(input_layer, n_level_filters, dropout_rate=0.2, data_f
     return convolution2
 
 
-# def create_context_module1(input_layer, n_level_filters, dropout_rate=0.3, data_format="channels_first"):
-#    convolutionxy=create_convolution_block(input_layer=input_layer, n_filters=n_level_filters)
-#   convolutionxy=concatenate([input_layer, convolutionxy], axis=1)
-#   dropout = SpatialDropout3D(rate=dropout_rate, data_format=data_format)(convolutionxy)
-#   convolution1 = create_convolution_block(input_layer=dropout, n_filters=n_level_filters, kernel=(1, 3, 3))
-#  convolutiona=create_convolution_block(input_layer=convolution1, n_filters=n_level_filters, kernel=(3, 1, 1))
-#  concat1=concatenate([convolution1, convolutiona, dropout], axis=1)
-#  convolution2=create_convolution_block(input_layer=concat1, n_filters=n_level_filters, kernel=(3, 3, 1))
-# convolutionb=create_convolution_block(input_layer=convolution2, n_filters=n_level_filters, kernel=(1, 1, 3))
-#   concat2=concatenate([convolution1, convolutiona, convolution2, convolutionb, dropout], axis=1)
-#  convolution3=create_convolution_block(input_layer=concat2, n_filters=n_level_filters, kernel=(3, 1, 3))
-#  convolutionc=create_convolution_block(input_layer=convolution3, n_filters=n_level_filters, kernel=(1, 3, 1))
-#   concat3=concatenate([convolutiona, convolutionb, convolutionc], axis=1)
-# convolution7=create_convolution_block(input_layer=concat3, n_filters=n_level_filters, kernel=(1, 1, 1))
-#  return convolution7
+
 
 def create_context_module1(input_layer, n_level_filters, dropout_rate=0.2, data_format="channels_first"):
     convolution1 = create_convolution_block(input_layer=input_layer, n_filters=2)
@@ -311,19 +237,6 @@ def create_up_sampling_module1(input_layer, n_filters, dilation_rate, dropout_ra
     convolution6 = create_convolution_block(concat21, n_filters=2, dilation_rate=(3, 3, 3))
     convolution7 = create_convolution_block(concat22, n_filters=2, dilation_rate=dilation_rate)
     concat3 = concatenate([convolution6, convolution7], axis=1)
-    # concat31=concatenate([dropout, convolution2, convolution4, convolution6], axis=1)
-    # concat32=concatenate([dropout, convolution3, convolution5, convolution7], axis=1)
-    ################################################################################################
-#    concata = concatenate([dropout, concat1, concat2, convolution6], axis=1)
- #   concatb = concatenate([dropout, concat2, concat3, convolution7], axis=1)
-  #  concatc = concatenate([concata, concatb], axis=1)
-   # dropout1 = SpatialDropout3D(rate=0.2, data_format=data_format)(concatc)
-    ######################################################################################################
-    #convolution8 = create_convolution_block(dropout1, n_filters=2, dilation_rate=dilation_rate)
-    #convolution9 = create_convolution_block(dropout1, n_filters=2, dilation_rate=(3, 3, 3))
-   # concat3 = concatenate([convolution8, convolution9], axis=1)
-    ###############################################################################################
     concat = concatenate([dropout, concat1, concat2, concat3], axis=1)
     convolution10 = create_convolution_block(concat, n_filters, kernel=(1, 1, 1))
-    # convolution7=create_convolution_block(convolution6, n_filters)
     return convolution10

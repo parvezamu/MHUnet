@@ -166,6 +166,8 @@ def isensee2017_model(input_shape=(4, 128, 128, 128), n_base_filters=16, depth=5
             concatenation_layer = Add()([level_output_layers[level_number], up_sampling])
         localization_output1 = create_localization_module(concatenation_layer, level_filters[level_number],
                                                           dropout_rate=dropout_rate)
+        
+        localization_output1 = concatenate([localization_output1, concatenation_layer], axis=1)
         localization_output = create_convolution_block(localization_output1, level_filters[level_number],
                                                        kernel=(1, 1, 1))
         current_layer = localization_output

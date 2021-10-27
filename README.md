@@ -4,4 +4,4 @@ This is our solution used for IEEE access paper [a link](https://ieeexplore.ieee
 
 
 
-Many thanks to the host of BraTS datasets.
+Many thanks to the host of the BraTS and ISLES datasets.

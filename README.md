@@ -11,24 +11,6 @@ MH UNet has offered the following contributions:
 6. We have used MICCAI BraTS and ISLES datasets for experimentation. Our proposed model outperformed all other state-of-the-art methods, including cascaded and ensembled approaches.
 
 Development Environment:
-Both my desktop and laptop had contributed a lot to the project.
-
-Server:
-
-V100 GPU of 32 GB
-
-ubuntu16.04 + virtualenv + python==3.6.2 + tensorflow-gpu==1.15.0 + keras==2.2.4
-
-
-Packages:
-Here are some packages you may need to install.
-
-1. For n4itk bias correction (https://ieeexplore.ieee.org/document/5445030) preprocessing, you may need to install ants.
-
-a.) Just follow the installation guide on their homepage here (
-Development Environment:
-Both my desktop and laptop had contributed a lot to the project.
-
 Server:
 
 V100 GPU of 32 GB

@@ -11,6 +11,7 @@ MH UNet has offered the following contributions:
 6. We have used MICCAI BraTS and ISLES datasets for experimentation. Our proposed model outperformed all other state-of-the-art methods, including cascaded and ensembled approaches.
 
 Development Environment:
+
 Server:
 
 V100 GPU of 32 GB
